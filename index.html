@@ -647,8 +647,16 @@ async function callAI() {
     body: JSON.stringify({ messages: chatHistory }),
   });
   const data = await response.json();
+
+  if (!response.ok) {
+    // Surface the real error instead of hiding it behind a generic message.
+    const detail = data.error || (data.details && data.details.error && data.details.error.message) || 'Unknown server error';
+    throw new Error(`Server responded ${response.status}: ${detail}`);
+  }
+
   const text = (data.content || []).map(b => b.text || '').join('');
-  return text || "I'm here, but I'm having trouble finding the right words right now.";
+  if (!text) throw new Error('AI response had no text content');
+  return text;
 }
 
 async function handleChat(msg) {
@@ -683,7 +691,9 @@ async function handleChat(msg) {
     }
   } catch (err) {
     typingEl.remove();
+    console.error('Aegis AI chat error:', err);
     addChatMsg("I'm having trouble connecting right now. In the meantime: cybercrime.gov.in for reporting, 1930 for the cybercrime helpline, or 1091 for the women's helpline.", 'bot');
+    addChatMsg("[Debug info -- remove before final submission]: " + err.message, 'bot');
     setQuickBtns(["Open the guide", "Try again"]);
   }
 }
