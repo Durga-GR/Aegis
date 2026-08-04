@@ -649,8 +649,10 @@ async function callAI() {
   const data = await response.json();
 
   if (!response.ok) {
-    // Surface the real error instead of hiding it behind a generic message.
-    const detail = data.error || (data.details && data.details.error && data.details.error.message) || 'Unknown server error';
+    // Check the specific nested error message FIRST -- the generic
+    // wrapper text was masking it before.
+    const nested = data.details && data.details.error && data.details.error.message;
+    const detail = nested || data.error || 'Unknown server error';
     throw new Error(`Server responded ${response.status}: ${detail}`);
   }
 
@@ -693,7 +695,6 @@ async function handleChat(msg) {
     typingEl.remove();
     console.error('Aegis AI chat error:', err);
     addChatMsg("I'm having trouble connecting right now. In the meantime: cybercrime.gov.in for reporting, 1930 for the cybercrime helpline, or 1091 for the women's helpline.", 'bot');
-    addChatMsg("[Debug info -- remove before final submission]: " + err.message, 'bot');
     setQuickBtns(["Open the guide", "Try again"]);
   }
 }
