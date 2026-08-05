@@ -17,7 +17,7 @@ Your role and limits:
 - Keep replies short: 2 to 4 sentences, warm, and easy to read on a small phone screen.
 - Always make clear, when relevant, that you're a supportive first step, not a replacement for professional or police help.`;
 
-const MODEL = 'gemini-3-flash-preview';// free-tier eligible
+const MODEL = 'gemini-3-flash-preview'; // free-tier eligible (as of Aug 2026)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -51,7 +51,13 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents,
-          generationConfig: { maxOutputTokens: 300 },
+          generationConfig: {
+            maxOutputTokens: 1024,
+            // Gemini 3 models "think" before answering, which eats into
+            // maxOutputTokens. LOW keeps replies fast and avoids the
+            // model getting cut off mid-sentence for a simple chat reply.
+            thinkingConfig: { thinkingLevel: 'LOW' },
+          },
         }),
       }
     );
