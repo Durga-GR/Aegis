@@ -17,7 +17,7 @@ Your role and limits:
 - Keep replies short: 2 to 4 sentences, warm, and easy to read on a small phone screen.
 - Always make clear, when relevant, that you're a supportive first step, not a replacement for professional or police help.`;
 
-const MODEL = 'gemini-2.5-flash'; // free-tier eligible
+const MODEL = 'gemini-3-flash-preview';// free-tier eligible
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
