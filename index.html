@@ -10,7 +10,7 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: 100vh; background: #cfeaf5; font-family: 'Segoe UI', Arial, sans-serif; user-select: none;
   }
-  h1 { color: #2b6777; margin-bottom: 10px; font-size: 22px; }
+  h1 { color: #2b6777; margin-bottom: 6px; font-size: 20px; }
   #gameWrap { position: relative; }
   canvas {
     background: linear-gradient(#87ceeb, #cfeaf5 80%, #dff3c4 80%);
@@ -34,6 +34,24 @@
   button.small { padding: 5px 10px; font-size: 12px; margin: 2px; }
   #hint { margin-top: 10px; font-size: 12px; color: #2b6777; opacity: 0.75; text-align: center; max-width: 380px; }
   .menuBtns { display: flex; flex-direction: column; gap: 8px; width: 210px; }
+
+  /* True full-screen layout on phones: title and hint float over the game
+     instead of taking their own space, and the canvas fills the whole
+     viewport edge-to-edge with no border/margin. */
+  @media (max-width: 600px) {
+    html, body { height: 100%; overflow: hidden; }
+    body { display: block; }
+    #gameWrap { width: 100vw; height: 100vh; height: 100dvh; }
+    canvas { width: 100vw !important; height: 100vh !important; height: 100dvh !important; border: none; border-radius: 0; }
+    h1 {
+      position: fixed; top: 8px; left: 0; right: 0; margin: 0; z-index: 25;
+      pointer-events: none; text-shadow: 0 1px 3px rgba(255,255,255,0.7);
+    }
+    #hint {
+      position: fixed; bottom: 6px; left: 0; right: 0; margin: 0; z-index: 25;
+      pointer-events: none; font-size: 10.5px; max-width: none;
+    }
+  }
 
   #leaderList { list-style: none; width: 220px; margin-bottom: 10px; text-align: left; }
   #leaderList li { display: flex; justify-content: space-between; padding: 4px 8px; font-size: 13px; background: rgba(255,255,255,0.12); border-radius: 4px; margin-bottom: 4px; }
@@ -284,6 +302,27 @@
 
 <script>
 const canvas = document.getElementById('game');
+
+// Size the canvas to the real screen instead of a fixed 380x560, so it
+// actually fills a phone screen. This sets the canvas's real pixel
+// resolution (not just its CSS display size), so all the existing
+// touch-position math elsewhere in this file keeps working unchanged --
+// it always assumes canvas pixels match touch coordinates 1:1.
+(function sizeCanvasToScreen() {
+  const isPhone = window.innerWidth <= 600;
+  if (isPhone) {
+    // Full-screen edge-to-edge: match the exact viewport (dvh-aware height
+    // if the browser reported one via CSS; innerHeight is a solid fallback).
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  } else {
+    // Desktop: keep a nicer bounded "card" size rather than stretching huge.
+    const maxW = 420, maxH = 700, reserved = 170;
+    canvas.width = Math.max(300, Math.min(window.innerWidth - 40, maxW));
+    canvas.height = Math.max(460, Math.min(window.innerHeight - reserved, maxH));
+  }
+})();
+
 const ctx = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
 const scoreBox = document.getElementById('scoreBox');
@@ -695,7 +734,6 @@ async function handleChat(msg) {
     typingEl.remove();
     console.error('Aegis AI chat error:', err);
     addChatMsg("I'm having trouble connecting right now. In the meantime: cybercrime.gov.in for reporting, 1930 for the cybercrime helpline, or 1091 for the women's helpline.", 'bot');
-    addChatMsg("[Debug info -- remove before final submission]: " + err.message, 'bot');
     setQuickBtns(["Open the guide", "Try again"]);
   }
 }
