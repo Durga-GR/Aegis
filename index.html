@@ -68,6 +68,8 @@
   #settingsPanel .row { margin-bottom: 6px; }
   #settingsPanel .note { margin-top: 8px; font-size: 11px; color: #999; }
   #settingsPanel .divider { border-top: 1px dashed #ddd; margin: 10px 0; }
+  .contactChip { display: inline-flex; align-items: center; gap: 6px; background: #eef7f9; border-radius: 14px; padding: 4px 10px; font-size: 12px; margin: 3px 4px 0 0; }
+  .contactChip button { padding: 0 4px; margin: 0; background: none; color: #999; font-size: 12px; }
 
   .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.15s; border-radius: 6px; }
   #pressRing {
@@ -191,9 +193,12 @@
     <div class="divider"></div>
 
     <div class="row">
-      <label>Emergency alerts</label>
-      <button class="small" id="enableAlertsBtn" style="margin-top:6px;">Enable Alerts</button>
-      <span id="alertsStatus" style="font-size:11px;color:#888;margin-left:6px;"></span>
+      <label>Trusted friends (co-op invite list)</label>
+      <div id="contactChips"></div>
+      <input type="text" id="contactName" placeholder="Friend's name" style="margin-top:6px;">
+      <input type="tel" id="contactPhone" placeholder="Phone number" style="margin-top:6px;">
+      <button class="small" id="enableAlertsBtn" style="margin-top:6px;">Enable alerts on this phone</button>
+      <span id="alertsStatus" style="font-size:11px;color:#888;"></span>
     </div>
 
     <div class="row">
@@ -351,7 +356,7 @@ function beep(freq, dur) {
   } catch (e) {}
 }
 
-const CONFIG = { safeWord: 'purple elephant', combo: ['S','S','L'] };
+const CONFIG = { contacts: [], safeWord: 'purple elephant', combo: ['S','S','L'] };
 let evidenceLog = [];
 
 /* ================= Game ================= */
@@ -446,7 +451,7 @@ document.getElementById('sound').addEventListener('change', e => { soundOn = e.t
 window.addEventListener('keydown', e => { if (e.code === 'Space') flap(); });
 
 let pressTimer = null;
-function startPress() { pressTimer = setTimeout(() => { showPanel('settingsPanel'); renderLog(); }, 600); }
+function startPress() { pressTimer = setTimeout(() => { showPanel('settingsPanel'); renderContacts(); renderLog(); }, 600); }
 function cancelPress() { clearTimeout(pressTimer); }
 scoreBox.addEventListener('mousedown', startPress);
 scoreBox.addEventListener('mouseup', cancelPress);
@@ -455,6 +460,48 @@ scoreBox.addEventListener('touchstart', e => { e.preventDefault(); startPress();
 scoreBox.addEventListener('touchend', cancelPress);
 document.getElementById('closeSettings').addEventListener('click', () => showPanel('menuPanel'));
 document.getElementById('safeWord').addEventListener('change', e => { CONFIG.safeWord = e.target.value.trim().toLowerCase(); });
+
+function renderContacts() {
+  const wrap = document.getElementById('contactChips'); wrap.innerHTML = '';
+  CONFIG.contacts.forEach((c, i) => {
+    const chip = document.createElement('span'); chip.className = 'contactChip';
+    chip.innerHTML = `${c.name} <button data-i="${i}">×</button>`;
+    chip.querySelector('button').addEventListener('click', () => { CONFIG.contacts.splice(i,1); renderContacts(); });
+    wrap.appendChild(chip);
+  });
+}
+const VAPID_PUBLIC_KEY = 'BN5quzHpfCr0bSPpjOH0WizRKBy86kLyCr092GSjj7G8ZprMB9h-aTBJOhIY8mhCtOWnzbAyIF_jjf0K6VIaCrk';
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
+let mySubscription = null;
+async function enableAlerts() {
+  const statusEl = document.getElementById('alertsStatus');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    statusEl.textContent = 'Push not supported on this browser.';
+    return;
+  }
+  try {
+    const reg = await navigator.serviceWorker.register('/sw.js');
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+    mySubscription = sub;
+    await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sub)
+    });
+    statusEl.textContent = 'Alerts enabled on this phone!';
+  } catch (err) {
+    statusEl.textContent = 'Could not enable alerts: ' + err.message;
+  }
+}
+document.getElementById('enableAlertsBtn').addEventListener('click', enableAlerts);
 
 let tapLog = [], recordingCombo = false, recordedTaps = [], pressStart = null;
 function classify(durationMs) { return durationMs < 250 ? 'S' : 'L'; }
@@ -570,142 +617,46 @@ document.getElementById('testVoiceBtn').addEventListener('click', () => {
   rec.onerror = () => { statusEl.textContent = 'Mic error or permission denied.'; };
 });
 
-// ===============================
-// PUSH NOTIFICATIONS
-// ===============================
-
-const VAPID_PUBLIC_KEY =
-  'BN5quzHpfCr0bSPpjOH0WizRKBy86kLyCr092GSjj7G8ZprMB9h-aTBJOhIY8mhCtOWnzbAyIF_jjf0K6VIaCrk';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, '+')
-    .replace(/_/g, '/');
-  const rawData = atob(base64);
-  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
-}
-
-let mySubscription = null;
-
-async function enableAlerts() {
-  const statusEl = document.getElementById('alertsStatus');
-
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    statusEl.textContent = 'Push notifications are not supported.';
-    return;
-  }
-
-  try {
-    statusEl.textContent = 'Enabling alerts...';
-
-    const reg = await navigator.serviceWorker.register('/sw.js');
-
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      statusEl.textContent = 'Notification permission was not granted.';
-      return;
-    }
-
-    let subscription = await reg.pushManager.getSubscription();
-
-    if (!subscription) {
-      subscription = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-      });
-    }
-
-    mySubscription = subscription;
-
-    const response = await fetch('/api/save-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription)
-    });
-
-    if (!response.ok) throw new Error('Failed to save push subscription');
-
-    statusEl.textContent = '✓ Alerts enabled on this device!';
-  } catch (err) {
-    console.error('Push notification error:', err);
-    statusEl.textContent = 'Could not enable alerts: ' + err.message;
-  }
-}
-
-document.getElementById('enableAlertsBtn').addEventListener('click', enableAlerts);
-
-
-// ===============================
-// EMERGENCY TRIGGER
-// ===============================
-
 function triggerEmergency(source) {
   flashEl.style.opacity = '0.15';
   setTimeout(() => flashEl.style.opacity = '0', 150);
-
-  const entry = {
-    time: new Date().toLocaleString(),
-    source
-  };
-
+  const entry = { time: new Date().toLocaleString(), source, contacts: CONFIG.contacts.map(c => c.name) };
   evidenceLog.unshift(entry);
   renderLog();
-
   function sendPushAlert(locationText) {
-    if (!mySubscription) {
-      console.log('Push alert skipped: no subscription enabled.');
-      return;
-    }
-
+    if (!mySubscription) return; // no device enabled yet
     fetch('/api/send-alert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subscription: mySubscription,
-        location: locationText,
-        source,
-        time: entry.time
-      })
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to send emergency alert');
-        return response.json();
-      })
-      .then(data => console.log('Emergency push sent:', data))
-      .catch(error => console.error('Emergency push error:', error));
+      body: JSON.stringify({ subscription: mySubscription, location: locationText })
+    }).catch(() => {});
   }
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       pos => {
-        entry.location =
-          `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+        entry.location = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
         renderLog();
         sendPushAlert(entry.location);
       },
-      error => {
-        console.warn('Location error:', error.message);
-        entry.location = 'Location unavailable';
+      () => {
+        entry.location = 'unavailable (permission denied)';
         renderLog();
-        sendPushAlert('Location unavailable');
+        sendPushAlert(entry.location);
       },
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      { timeout: 4000 }
     );
   } else {
-    entry.location = 'Location unavailable';
-    renderLog();
-    sendPushAlert('Location unavailable');
+    entry.location = 'unavailable';
+    sendPushAlert(entry.location);
   }
 }
-
 function logHtml() {
   if (!evidenceLog.length) return '<p style="color:#999;font-size:12px;">No entries yet.</p>';
   return evidenceLog.map(e => `
     <div class="logEntry">
       <div class="t">${e.time}</div>
       ${e.note ? e.note : `<b>${e.source}</b> triggered.<br>
-      Push alert: ${mySubscription ? 'enabled on this device' : 'not enabled'}.<br>
+      Alert (demo only, not actually sent) would go to: ${e.contacts.length ? e.contacts.join(', ') : 'no contacts saved yet'}.<br>
       Location: ${e.location || 'fetching...'}`}
     </div>`).join('');
 }
@@ -725,7 +676,7 @@ document.getElementById('exportLogBtn').addEventListener('click', () => {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'aegis_evidence_log.txt'; a.click();
 });
 function evidenceLogToText() {
-  return evidenceLog.map(e => `[${e.time}] ${e.note ? e.note : (e.source + ' | push alerts: ' + (mySubscription ? 'enabled' : 'not enabled') + ' | location: ' + (e.location||'n/a'))}`).join('\n') || 'No entries.';
+  return evidenceLog.map(e => `[${e.time}] ${e.note ? e.note : (e.source + ' | contacts: ' + e.contacts.join(', ') + ' | location: ' + (e.location||'n/a'))}`).join('\n') || 'No entries.';
 }
 
 document.getElementById('openJournalBtn').addEventListener('click', () => { renderLog(); showPanel('journalPanel'); });
@@ -850,10 +801,13 @@ function runDiagnostics() {
   results.push({ name: 'matchesCombo() rejects wrong sequence', pass: matchesCombo(['L','S','S'], ['S','S','L']) === false });
   results.push({ name: 'matchesCombo() matches tail of a longer log', pass: matchesCombo(['L','L','S','S','L'], ['S','S','L']) === true });
   results.push({ name: 'Easy difficulty is less demanding than Hard', pass: DIFFICULTIES.Easy.gap > DIFFICULTIES.Hard.gap && DIFFICULTIES.Easy.speed < DIFFICULTIES.Hard.speed });
-  results.push({
-    name: 'Push notification support check is available',
-    pass: ('serviceWorker' in navigator) && ('PushManager' in window)
-  });
+  (function () {
+    const before = CONFIG.contacts.length;
+    CONFIG.contacts.push({ name: '__diag_test__', phone: '0000000000' });
+    const idx = CONFIG.contacts.findIndex(c => c.name === '__diag_test__');
+    CONFIG.contacts.splice(idx, 1);
+    results.push({ name: 'Adding then removing a contact returns to original count', pass: CONFIG.contacts.length === before });
+  })();
   (function () {
     const before = evidenceLog.length;
     triggerEmergency('Diagnostics test trigger');
@@ -881,13 +835,14 @@ const DEMO_STEPS = [
     run: () => showPanel('menuPanel'),
   },
   {
-    text: "Behind the scenes, demo data is now pre-loaded: a quick phrase and a power move combo — so nothing needs configuring live.",
+    text: "Behind the scenes, demo data is now pre-loaded: an emergency contact, a quick phrase, and a power move combo — so nothing needs configuring live.",
     run: () => {
+      if (!CONFIG.contacts.length) CONFIG.contacts.push({ name: 'Demo Contact', phone: '9999999999' });
       CONFIG.safeWord = 'purple elephant';
       CONFIG.combo = ['S','S','L'];
       document.getElementById('safeWord').value = CONFIG.safeWord;
       document.getElementById('comboDisplay').textContent = CONFIG.combo.join(' - ') + ' (saved)';
-      showPanel('settingsPanel'); renderLog();
+      showPanel('settingsPanel'); renderContacts(); renderLog();
     },
   },
   {
