@@ -1,9 +1,11 @@
+
 {
   "name": "aegis",
   "version": "1.0.0",
   "private": true,
   "description": "Aegis - a disguised safety companion app (IDEATHON 2026)",
   "dependencies": {
+    "@upstash/redis": "^1.38.2",
     "web-push": "^3.6.7"
   }
 }
