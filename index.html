@@ -194,11 +194,11 @@
 
     <div class="row">
       <label>Trusted friends (co-op invite list)</label>
+      <p style="font-size:11px;color:#999;margin:2px 0 6px;">Add a friend, then copy their invite link and send it to them (WhatsApp, SMS, etc). Once they open it on their own phone and enable alerts, they'll get notified if you ever trigger an alert.</p>
       <div id="contactChips"></div>
       <input type="text" id="contactName" placeholder="Friend's name" style="margin-top:6px;">
       <input type="tel" id="contactPhone" placeholder="Phone number" style="margin-top:6px;">
-      <button class="small" id="enableAlertsBtn" style="margin-top:6px;">Enable alerts on this phone</button>
-      <span id="alertsStatus" style="font-size:11px;color:#888;"></span>
+      <button class="small" id="addContactBtn" style="margin-top:6px;">Add friend</button>
     </div>
 
     <div class="row">
@@ -226,6 +226,16 @@
 
     <button id="openJournalBtn" style="margin-top:10px;">Open Journal</button>
     <button class="secondary" id="closeSettings">Back to game</button>
+  </div>
+
+  <div id="invitePanel" class="panel">
+    <h2>You've been added as a trusted contact</h2>
+    <p id="inviteText">Someone you know added you to their trusted contacts list in this app. If you agree to help keep them safe, enable alerts below -- if they're ever in danger, you'll get a notification with their location.</p>
+    <div class="menuBtns">
+      <button class="small" id="inviteEnableBtn">Enable alerts for them</button>
+      <span id="inviteStatus" style="font-size:11px;color:#888;"></span>
+      <button class="secondary" id="inviteDeclineBtn">No thanks, take me to the game</button>
+    </div>
   </div>
 
   <div id="journalPanel" class="panel">
@@ -331,7 +341,7 @@ const coinCountEl = document.getElementById('coinCount');
 const flashEl = document.getElementById('flash');
 
 const panels = {};
-['menuPanel','overPanel','leaderPanel','shopPanel','settingsPanel','journalPanel'].forEach(id => panels[id] = document.getElementById(id));
+['menuPanel','overPanel','leaderPanel','shopPanel','settingsPanel','journalPanel','invitePanel'].forEach(id => panels[id] = document.getElementById(id));
 function showPanel(id) { Object.values(panels).forEach(p => p.classList.remove('show')); panels[id].classList.add('show'); }
 
 /* ================= Session state (in-memory only) ================= */
@@ -358,6 +368,22 @@ function beep(freq, dur) {
 
 const CONFIG = { contacts: [], safeWord: 'purple elephant', combo: ['S','S','L'] };
 let evidenceLog = [];
+
+/* Each person using this app on their own phone gets a private, permanent ID
+   so the server can tell "this victim's trusted contacts" apart from anyone
+   else's. It's just a random string, saved locally on this device -- never
+   shown on screen, never tied to a name. Generated once and reused. */
+function getOrCreateVictimId() {
+  let id = null;
+  try { id = localStorage.getItem('aegisVictimId'); } catch (e) {}
+  if (!id) {
+    id = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    try { localStorage.setItem('aegisVictimId', id); } catch (e) {}
+  }
+  return id;
+}
+const VICTIM_ID = getOrCreateVictimId();
+function genContactId() { return 'c_' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
 /* ================= Game ================= */
 let bird, pipes, coins, score, roundCoins, gravity, flapPower, gameRunning, pipeGap, pipeWidth, pipeSpeed, frame;
@@ -461,15 +487,43 @@ scoreBox.addEventListener('touchend', cancelPress);
 document.getElementById('closeSettings').addEventListener('click', () => showPanel('menuPanel'));
 document.getElementById('safeWord').addEventListener('change', e => { CONFIG.safeWord = e.target.value.trim().toLowerCase(); });
 
+function inviteLinkFor(contact) {
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.searchParams.set('invite', '1');
+  url.searchParams.set('v', VICTIM_ID);
+  url.searchParams.set('c', contact.id);
+  url.searchParams.set('n', contact.name);
+  return url.toString();
+}
 function renderContacts() {
   const wrap = document.getElementById('contactChips'); wrap.innerHTML = '';
   CONFIG.contacts.forEach((c, i) => {
     const chip = document.createElement('span'); chip.className = 'contactChip';
-    chip.innerHTML = `${c.name} <button data-i="${i}">×</button>`;
-    chip.querySelector('button').addEventListener('click', () => { CONFIG.contacts.splice(i,1); renderContacts(); });
+    const statusLabel = c.subscribed ? ' (alerts on)' : ' (invite not accepted yet)';
+    chip.innerHTML = `${c.name}${statusLabel} <button class="small" data-copy="${i}" style="padding:0 6px;">Copy invite link</button> <button data-i="${i}">×</button>`;
+    chip.querySelector('[data-copy]').addEventListener('click', async () => {
+      const link = inviteLinkFor(c);
+      try {
+        await navigator.clipboard.writeText(link);
+        alert('Invite link copied! Send it to ' + c.name + ' -- they need to open it on their own phone and tap "Enable alerts".');
+      } catch (e) {
+        prompt('Copy this link and send it to ' + c.name + ':', link);
+      }
+    });
+    chip.querySelector('button:not([data-copy])').addEventListener('click', () => { CONFIG.contacts.splice(i,1); renderContacts(); });
     wrap.appendChild(chip);
   });
 }
+document.getElementById('addContactBtn').addEventListener('click', () => {
+  const name = document.getElementById('contactName').value.trim();
+  const phone = document.getElementById('contactPhone').value.trim();
+  if (!name || !phone) return;
+  CONFIG.contacts.push({ id: genContactId(), name, phone, subscribed: false });
+  document.getElementById('contactName').value = ''; document.getElementById('contactPhone').value = '';
+  renderContacts();
+});
+
 const VAPID_PUBLIC_KEY = 'BN5quzHpfCr0bSPpjOH0WizRKBy86kLyCr092GSjj7G8ZprMB9h-aTBJOhIY8mhCtOWnzbAyIF_jjf0K6VIaCrk';
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -477,12 +531,15 @@ function urlBase64ToUint8Array(base64String) {
   const rawData = atob(base64);
   return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
 }
-let mySubscription = null;
-async function enableAlerts() {
-  const statusEl = document.getElementById('alertsStatus');
+/* Subscribes THIS device to receive push alerts on behalf of victimId/contactId.
+   When a trusted contact opens their invite link, we call this with the
+   victim's and their own contact ID pulled from the URL -- so the
+   subscription gets tied to the right person on the server, not to
+   whoever happens to click the button. */
+async function enableAlertsFor(victimId, contactId, statusEl) {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     statusEl.textContent = 'Push not supported on this browser.';
-    return;
+    return false;
   }
   try {
     const reg = await navigator.serviceWorker.register('/sw.js');
@@ -490,18 +547,38 @@ async function enableAlerts() {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     });
-    mySubscription = sub;
     await fetch('/api/save-subscription', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(sub)
+      body: JSON.stringify({ victimId, contactId, subscription: sub })
     });
     statusEl.textContent = 'Alerts enabled on this phone!';
+    return true;
   } catch (err) {
     statusEl.textContent = 'Could not enable alerts: ' + err.message;
+    return false;
   }
 }
-document.getElementById('enableAlertsBtn').addEventListener('click', enableAlerts);
+
+/* ================= Invite acceptance flow ================= */
+function checkForInvite() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('invite') !== '1') return;
+  const victimId = params.get('v'), contactId = params.get('c'), name = params.get('n') || 'a friend';
+  if (!victimId || !contactId) return;
+  document.getElementById('inviteText').textContent =
+    `${name} added you as a trusted contact in this app. If you agree to help keep them safe, enable alerts below -- if they're ever in danger, you'll get a notification with their location.`;
+  showPanel('invitePanel');
+  document.getElementById('inviteEnableBtn').addEventListener('click', async () => {
+    const statusEl = document.getElementById('inviteStatus');
+    const ok = await enableAlertsFor(victimId, contactId, statusEl);
+    if (ok) setTimeout(() => { showPanel('menuPanel'); history.replaceState({}, '', window.location.pathname); }, 1200);
+  });
+  document.getElementById('inviteDeclineBtn').addEventListener('click', () => {
+    showPanel('menuPanel');
+    history.replaceState({}, '', window.location.pathname);
+  });
+}
 
 let tapLog = [], recordingCombo = false, recordedTaps = [], pressStart = null;
 function classify(durationMs) { return durationMs < 250 ? 'S' : 'L'; }
@@ -624,11 +701,12 @@ function triggerEmergency(source) {
   evidenceLog.unshift(entry);
   renderLog();
   function sendPushAlert(locationText) {
-    if (!mySubscription) return; // no device enabled yet
+    // Server looks up every trusted contact who has accepted an invite and
+    // enabled alerts for VICTIM_ID, and pushes to all of them.
     fetch('/api/send-alert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription: mySubscription, location: locationText })
+      body: JSON.stringify({ victimId: VICTIM_ID, location: locationText })
     }).catch(() => {});
   }
   if (navigator.geolocation) {
@@ -803,7 +881,7 @@ function runDiagnostics() {
   results.push({ name: 'Easy difficulty is less demanding than Hard', pass: DIFFICULTIES.Easy.gap > DIFFICULTIES.Hard.gap && DIFFICULTIES.Easy.speed < DIFFICULTIES.Hard.speed });
   (function () {
     const before = CONFIG.contacts.length;
-    CONFIG.contacts.push({ name: '__diag_test__', phone: '0000000000' });
+    CONFIG.contacts.push({ id: genContactId(), name: '__diag_test__', phone: '0000000000', subscribed: false });
     const idx = CONFIG.contacts.findIndex(c => c.name === '__diag_test__');
     CONFIG.contacts.splice(idx, 1);
     results.push({ name: 'Adding then removing a contact returns to original count', pass: CONFIG.contacts.length === before });
@@ -889,6 +967,7 @@ document.getElementById('demoExitBtn').addEventListener('click', () => { demoBar
 
 /* initial paint */
 bird = { x:70, y:H/2, vy:0, r:14 }; pipes = []; coins = []; draw();
+checkForInvite();
 </script>
 </body>
 </html>
