@@ -19,7 +19,7 @@
   #topBar { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; pointer-events: none; }
   #scoreBox { font-size: 28px; font-weight: bold; color: #fff; text-shadow: 2px 2px 3px rgba(0,0,0,0.4); pointer-events: auto; margin: 0 auto; }
   #coinBox { font-size: 14px; font-weight: bold; color: #402c00; background: #ffd166; border-radius: 12px; padding: 4px 10px; box-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
-
+ 
   .panel {
     position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.5); color: #fff; text-align: center; border-radius: 6px; padding: 18px; overflow-y: auto;
@@ -34,7 +34,7 @@
   button.small { padding: 5px 10px; font-size: 12px; margin: 2px; }
   #hint { margin-top: 10px; font-size: 12px; color: #2b6777; opacity: 0.75; text-align: center; max-width: 380px; }
   .menuBtns { display: flex; flex-direction: column; gap: 8px; width: 210px; }
-
+ 
   /* True full-screen layout on phones: title and hint float over the game
      instead of taking their own space, and the canvas fills the whole
      viewport edge-to-edge with no border/margin. */
@@ -52,15 +52,15 @@
       pointer-events: none; font-size: 10.5px; max-width: none;
     }
   }
-
+ 
   #leaderList { list-style: none; width: 220px; margin-bottom: 10px; text-align: left; }
   #leaderList li { display: flex; justify-content: space-between; padding: 4px 8px; font-size: 13px; background: rgba(255,255,255,0.12); border-radius: 4px; margin-bottom: 4px; }
-
+ 
   .skinRow { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center; }
   .skinOpt { width: 62px; padding: 8px 4px; background: rgba(255,255,255,0.12); border-radius: 8px; cursor: pointer; border: 2px solid transparent; font-size: 10px; }
   .skinOpt.selected { border-color: #ffb703; }
   .skinDot { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 4px; }
-
+ 
   #settingsPanel { background: #fdfdfd; color: #333; align-items: stretch; text-align: left; justify-content: flex-start; }
   #settingsPanel h2 { color: #2b6777; margin-bottom: 10px; font-size: 17px; }
   #settingsPanel label { display: block; margin: 8px 0 3px; font-weight: bold; font-size: 12px; }
@@ -70,31 +70,31 @@
   #settingsPanel .divider { border-top: 1px dashed #ddd; margin: 10px 0; }
   .contactChip { display: inline-flex; align-items: center; gap: 6px; background: #eef7f9; border-radius: 14px; padding: 4px 10px; font-size: 12px; margin: 3px 4px 0 0; }
   .contactChip button { padding: 0 4px; margin: 0; background: none; color: #999; font-size: 12px; }
-
+ 
   .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.15s; border-radius: 6px; }
   #pressRing {
     position: absolute; width: 10px; height: 10px; border-radius: 50%;
     border: 2px solid #ffb703; transform: translate(-50%, -50%);
     opacity: 0; pointer-events: none; z-index: 15;
   }
-
+ 
   .logEntry { background: #f5f9fa; border-left: 3px solid #ffb703; padding: 6px 8px; margin-bottom: 6px; border-radius: 4px; font-size: 12.5px; }
   .logEntry .t { font-size: 10.5px; color: #888; }
   .logWrap { max-height: 160px; overflow-y: auto; margin-top: 6px; }
-
+ 
   #journalPanel { background: #fdfdfd; color: #333; align-items: stretch; text-align: left; justify-content: flex-start; }
   .tabRow { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
   .tabBtn { flex: 1; min-width: 70px; padding: 7px; font-size: 11.5px; background: #eee; color: #555; border-radius: 6px 6px 0 0; }
   .tabBtn.active { background: #2b6777; color: #fff; }
   .tabContent { display: none; flex: 1; overflow-y: auto; font-size: 12.5px; }
   .tabContent.active { display: block; }
-
+ 
   .guideBlock { margin-bottom: 12px; }
   .guideBlock h3 { color: #2b6777; font-size: 13px; margin-bottom: 4px; }
   .guideBlock p, .guideBlock li { font-size: 12px; color: #333; line-height: 1.45; }
   .guideBlock ul { padding-left: 18px; margin-top: 4px; }
   .helplineBox { background: #fff4e0; border-radius: 6px; padding: 8px; margin: 6px 0; font-size: 12px; }
-
+ 
   #chatTab { display: none; flex-direction: column; height: 260px; }
   #chatTab.active { display: flex; }
   .chatLog { flex: 1; overflow-y: auto; padding: 6px 0; display: flex; flex-direction: column; }
@@ -104,7 +104,7 @@
   .chatInputRow { display: flex; gap: 6px; margin-top: 6px; }
   .chatInputRow input { flex: 1; padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
   .quickBtns { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
-
+ 
   .testRow { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; margin-bottom: 5px; border-radius: 4px; font-size: 12px; background: #f5f9fa; }
   .testRow.pass { border-left: 3px solid #3aa655; }
   .testRow.fail { border-left: 3px solid #ff6b6b; }
@@ -112,7 +112,7 @@
   .testTag.pass { background: #e3f6e8; color: #256b39; }
   .testTag.fail { background: #ffe3e3; color: #a02020; }
   #diagSummary { font-weight: bold; margin-bottom: 8px; font-size: 13px; color: #2b6777; }
-
+ 
   /* Phase 8: Demo Mode walkthrough */
   #demoBar {
     position: absolute; left: 10px; right: 10px; bottom: 10px;
@@ -127,19 +127,19 @@
 </style>
 </head>
 <body>
-
+ 
 <h1>Sky Hopper</h1>
 <div id="gameWrap">
   <canvas id="game" width="380" height="560"></canvas>
   <div id="flash" class="flash"></div>
   <div id="pressRing"></div>
-
+ 
   <div id="topBar">
     <div id="coinBox">🪙 <span id="coinCount">0</span></div>
     <div id="scoreBox">0</div>
     <div style="width:60px"></div>
   </div>
-
+ 
   <div id="menuPanel" class="panel show">
     <h2>Sky Hopper</h2>
     <p>Tap, click, or press Space to fly.</p>
@@ -150,7 +150,7 @@
       <button class="secondary" id="startDemoBtn">▶ Start guided demo</button>
     </div>
   </div>
-
+ 
   <div id="overPanel" class="panel">
     <h2>Game over</h2>
     <p id="overText">Score: 0</p>
@@ -159,20 +159,20 @@
       <button class="secondary" id="overMenuBtn">Main menu</button>
     </div>
   </div>
-
+ 
   <div id="leaderPanel" class="panel">
     <h2>Leaderboard</h2>
     <ul id="leaderList"></ul>
     <button class="secondary" id="leaderBackBtn">Back</button>
   </div>
-
+ 
   <div id="shopPanel" class="panel">
     <h2>Bird shop</h2>
     <p>Collect coins in-flight to unlock skins.</p>
     <div class="skinRow" id="skinRow"></div>
     <button class="secondary" id="shopBackBtn">Back</button>
   </div>
-
+ 
   <div id="settingsPanel" class="panel">
     <h2>Game settings</h2>
     <div class="row">
@@ -189,9 +189,9 @@
       <label>Sound</label>
       <select id="sound"><option>On</option><option>Off</option></select>
     </div>
-
+ 
     <div class="divider"></div>
-
+ 
     <div class="row">
       <label>Trusted friends (co-op invite list)</label>
       <p style="font-size:11px;color:#999;margin:2px 0 6px;">Add a friend, then copy their invite link and send it to them (WhatsApp, SMS, etc). Once they open it on their own phone and enable alerts, they'll get notified if you ever trigger an alert.</p>
@@ -200,22 +200,22 @@
       <input type="tel" id="contactPhone" placeholder="Phone number" style="margin-top:6px;">
       <button class="small" id="addContactBtn" style="margin-top:6px;">Add friend</button>
     </div>
-
+ 
     <div class="row">
       <label>Quick phrase (say this to trigger a quick-save)</label>
       <input type="text" id="safeWord" placeholder="e.g. purple elephant" value="purple elephant">
       <button class="small" id="testVoiceBtn" style="margin-top:6px;">Test quick phrase (mic)</button>
       <span id="voiceStatus" style="font-size:11px;color:#888;"></span>
     </div>
-
+ 
     <div class="row">
       <label>Power move combo (tap the canvas to record)</label>
       <div id="comboDisplay" style="font-size:13px;font-weight:bold;color:#2b6777;">S - S - L</div>
       <button class="small" id="recordComboBtn" style="margin-top:6px;">Record new combo</button>
     </div>
-
+ 
     <p class="note">Saying your quick phrase, or tapping your power move combo, silently logs an entry with your location -- nothing changes on screen.</p>
-
+ 
     <div class="row">
       <label>Evidence log</label>
       <div class="logWrap" id="logEntries"><p style="color:#999;font-size:12px;">No entries yet.</p></div>
@@ -223,11 +223,11 @@
       <button class="small" id="addNoteBtn" style="margin-top:6px;">Add note</button>
       <button class="small secondary" id="exportLogBtn">Export log as file</button>
     </div>
-
+ 
     <button id="openJournalBtn" style="margin-top:10px;">Open Journal</button>
     <button class="secondary" id="closeSettings">Back to game</button>
   </div>
-
+ 
   <div id="invitePanel" class="panel">
     <h2>You've been added as a trusted contact</h2>
     <p id="inviteText">Someone you know added you to their trusted contacts list in this app. If you agree to help keep them safe, enable alerts below -- if they're ever in danger, you'll get a notification with their location.</p>
@@ -237,7 +237,7 @@
       <button class="secondary" id="inviteDeclineBtn">No thanks, take me to the game</button>
     </div>
   </div>
-
+ 
   <div id="journalPanel" class="panel">
     <h2>Journal</h2>
     <div class="tabRow">
@@ -246,9 +246,9 @@
       <button class="tabBtn" data-tab="chatTab">Chat</button>
       <button class="tabBtn" data-tab="diagTab">Diagnostics</button>
     </div>
-
+ 
     <div id="logTab" class="tabContent active"><div id="logEntries2"></div></div>
-
+ 
     <div id="guideTab" class="tabContent">
       <div class="guideBlock">
         <h3>If you're being threatened or blackmailed</h3>
@@ -277,9 +277,14 @@
         This guide is not a replacement for the police or a lawyer. If you are in immediate danger, please contact local emergency services or a trusted person right away.
       </div>
     </div>
-
+ 
     <div id="chatTab" class="tabContent">
       <div class="chatLog" id="chatLog"></div>
+      <div class="quickBtns" id="quickActions">
+        <button class="small secondary" data-prompt="Someone is threatening to share private images or content unless I pay them or send more. Can you help me write a calm, non-confrontational message that stalls for time without paying or sending anything else?">⏳ Help me stall for time</button>
+        <button class="small secondary" data-prompt="Does this sound like a common sextortion or blackmail scam pattern, and how can I tell whether the threat is real or automated?">🔍 Is this a known scam pattern?</button>
+        <button class="small secondary" data-prompt="Walk me through exactly how to report this to the 1930 cybercrime helpline and cybercrime.gov.in, step by step.">🛡️ How do I report this?</button>
+      </div>
       <div class="quickBtns" id="quickBtns"></div>
       <div class="chatInputRow">
         <input type="text" id="chatInput" placeholder="Type here...">
@@ -287,17 +292,35 @@
       </div>
       <div style="font-size:10.5px;color:#999;margin-top:6px;">In immediate danger? Call 112. Kiran mental health helpline: 1800-599-0019.</div>
     </div>
-
+ 
     <div id="diagTab" class="tabContent">
       <p style="font-size:12px;color:#666;margin-bottom:8px;">Runs automated checks on the trigger logic, logging, contacts, and chat routing.</p>
       <button class="small" id="runDiagBtn">Run diagnostics</button>
       <div id="diagSummary"></div>
       <div id="diagResults"></div>
     </div>
-
+ 
     <button class="secondary" id="journalBackBtn" style="margin-top:10px;">Back to settings</button>
   </div>
-
+ 
+  <!-- Duress decoy: if someone forces you to open whatever they think the
+       "real menu" is, a long-press on the Settings/Journal title opens this
+       fake engine console instead of anything that looks like a safety tool. -->
+  <div id="decoyPanel" class="panel">
+    <div style="width:100%;height:100%;background:#111;color:#00ff66;font-family:monospace;font-size:11.5px;text-align:left;padding:14px;border-radius:6px;overflow-y:auto;">
+      <div style="font-weight:bold;margin-bottom:8px;">[SKY HOPPER ENGINE v1.4.2 -- DEBUG]</div>
+      <div>Render pipeline: 60 FPS (canvas 2D)</div>
+      <div>Physics: gravity=0.45, flapPower=-7.5</div>
+      <div>Audio buffer: 44.1kHz stereo (ok)</div>
+      <div>Difficulty table: Easy / Normal / Hard loaded</div>
+      <div>Skins loaded: <span id="decoySkinCount"></span></div>
+      <div>Session high score: <span id="decoyHighScore"></span></div>
+      <hr style="border-color:#333;margin:10px 0;">
+      <label style="display:block;margin-bottom:10px;">Audio latency (ms): <input type="range" style="vertical-align:middle;"></label>
+      <button class="small secondary" id="decoyExitBtn" style="background:#222;color:#eee;border:1px solid #00ff66;">Exit debugger</button>
+    </div>
+  </div>
+ 
   <!-- Phase 8: guided demo bar -->
   <div id="demoBar">
     <div class="demoTitle">Guided demo — <span id="demoStepLabel">1 / 8</span></div>
@@ -308,12 +331,12 @@
     </div>
   </div>
 </div>
-
+ 
 <div id="hint">Long-press the score for settings · long-press the bird for chat</div>
-
+ 
 <script>
 const canvas = document.getElementById('game');
-
+ 
 // Size the canvas to the real screen instead of a fixed 380x560, so it
 // actually fills a phone screen. This sets the canvas's real pixel
 // resolution (not just its CSS display size), so all the existing
@@ -333,17 +356,39 @@ const canvas = document.getElementById('game');
     canvas.height = Math.max(460, Math.min(window.innerHeight - reserved, maxH));
   }
 })();
-
+ 
 const ctx = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
 const scoreBox = document.getElementById('scoreBox');
 const coinCountEl = document.getElementById('coinCount');
 const flashEl = document.getElementById('flash');
-
+ 
 const panels = {};
-['menuPanel','overPanel','leaderPanel','shopPanel','settingsPanel','journalPanel','invitePanel'].forEach(id => panels[id] = document.getElementById(id));
+['menuPanel','overPanel','leaderPanel','shopPanel','settingsPanel','journalPanel','invitePanel','decoyPanel'].forEach(id => panels[id] = document.getElementById(id));
 function showPanel(id) { Object.values(panels).forEach(p => p.classList.remove('show')); panels[id].classList.add('show'); }
-
+ 
+/* ================= Quick-exit / panic lock =================
+   If a sensitive panel (Settings or Journal) is open and something suggests
+   someone else might be about to see the screen -- the tab loses focus, the
+   window loses focus, or the phone is flipped face-down/into a pocket --
+   silently drop straight back to the ordinary game menu. No animation, no
+   confirmation, nothing that would draw a second look. */
+const SENSITIVE_PANELS = ['settingsPanel', 'journalPanel', 'invitePanel'];
+function isSensitivePanelOpen() {
+  return SENSITIVE_PANELS.some(id => panels[id].classList.contains('show'));
+}
+function panicLock() {
+  if (isSensitivePanelOpen()) showPanel('menuPanel');
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) panicLock(); });
+window.addEventListener('blur', panicLock);
+window.addEventListener('deviceorientation', e => {
+  // beta close to +/-180 or gamma with a large magnitude both indicate the
+  // phone has been flipped face-down or tucked away, not just tilted to look
+  // at while playing.
+  if (e.beta !== null && (Math.abs(e.beta) > 130 || Math.abs(e.gamma) > 75)) panicLock();
+});
+ 
 /* ================= Session state (in-memory only) ================= */
 let totalCoins = 0, highScores = [], unlockedSkins = ['classic'], selectedSkin = 'classic';
 const SKINS = [
@@ -365,10 +410,10 @@ function beep(freq, dur) {
     o.stop(audioCtx.currentTime + dur);
   } catch (e) {}
 }
-
+ 
 const CONFIG = { contacts: [], safeWord: 'purple elephant', combo: ['S','S','L'] };
 let evidenceLog = [];
-
+ 
 /* Each person using this app on their own phone gets a private, permanent ID
    so the server can tell "this victim's trusted contacts" apart from anyone
    else's. It's just a random string, saved locally on this device -- never
@@ -384,10 +429,10 @@ function getOrCreateVictimId() {
 }
 const VICTIM_ID = getOrCreateVictimId();
 function genContactId() { return 'c_' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
-
+ 
 /* ================= Game ================= */
 let bird, pipes, coins, score, roundCoins, gravity, flapPower, gameRunning, pipeGap, pipeWidth, pipeSpeed, frame;
-
+ 
 function resetGame() {
   const diff = DIFFICULTIES[document.getElementById('difficulty').value];
   bird = { x:70, y:H/2, vy:0, r:14 };
@@ -443,7 +488,7 @@ function endGame() {
   showPanel('overPanel');
 }
 function startGame() { Object.values(panels).forEach(p=>p.classList.remove('show')); resetGame(); draw(); loop(); }
-
+ 
 document.getElementById('playBtn').addEventListener('click', startGame);
 document.getElementById('retryBtn').addEventListener('click', startGame);
 document.getElementById('overMenuBtn').addEventListener('click', () => {
@@ -475,7 +520,7 @@ document.getElementById('shopBtn').addEventListener('click', () => { renderShop(
 document.getElementById('shopBackBtn').addEventListener('click', () => showPanel('menuPanel'));
 document.getElementById('sound').addEventListener('change', e => { soundOn = e.target.value === 'On'; });
 window.addEventListener('keydown', e => { if (e.code === 'Space') flap(); });
-
+ 
 let pressTimer = null;
 function startPress() { pressTimer = setTimeout(() => { showPanel('settingsPanel'); renderContacts(); renderLog(); }, 600); }
 function cancelPress() { clearTimeout(pressTimer); }
@@ -486,7 +531,7 @@ scoreBox.addEventListener('touchstart', e => { e.preventDefault(); startPress();
 scoreBox.addEventListener('touchend', cancelPress);
 document.getElementById('closeSettings').addEventListener('click', () => showPanel('menuPanel'));
 document.getElementById('safeWord').addEventListener('change', e => { CONFIG.safeWord = e.target.value.trim().toLowerCase(); });
-
+ 
 function inviteLinkFor(contact) {
   const url = new URL(window.location.href);
   url.search = '';
@@ -523,7 +568,7 @@ document.getElementById('addContactBtn').addEventListener('click', () => {
   document.getElementById('contactName').value = ''; document.getElementById('contactPhone').value = '';
   renderContacts();
 });
-
+ 
 const VAPID_PUBLIC_KEY = 'BN5quzHpfCr0bSPpjOH0WizRKBy86kLyCr092GSjj7G8ZprMB9h-aTBJOhIY8mhCtOWnzbAyIF_jjf0K6VIaCrk';
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -559,7 +604,7 @@ async function enableAlertsFor(victimId, contactId, statusEl) {
     return false;
   }
 }
-
+ 
 /* ================= Invite acceptance flow ================= */
 function checkForInvite() {
   const params = new URLSearchParams(window.location.search);
@@ -579,10 +624,10 @@ function checkForInvite() {
     history.replaceState({}, '', window.location.pathname);
   });
 }
-
+ 
 let tapLog = [], recordingCombo = false, recordedTaps = [], pressStart = null;
 function classify(durationMs) { return durationMs < 250 ? 'S' : 'L'; }
-
+ 
 /* Long-press directly on the bird (or anywhere, when not mid-flight) opens
    the chat -- its own disguised entry point, separate from the
    long-press-on-score settings entry. */
@@ -613,7 +658,7 @@ function openChat() {
   switchTab('chatTab');
   if (!chatLogEl.childElementCount) botIntro();
 }
-
+ 
 canvas.addEventListener('mousedown', e => { pressStart = Date.now(); flap(); startCharPress(e.offsetX, e.offsetY); });
 canvas.addEventListener('mouseup', () => { cancelCharPress(); if (!charPressFired) registerTap(); });
 canvas.addEventListener('mouseleave', cancelCharPress);
@@ -623,7 +668,7 @@ canvas.addEventListener('touchstart', e => {
   startCharPress(t.clientX - rect.left, t.clientY - rect.top);
 }, { passive:false });
 canvas.addEventListener('touchend', () => { cancelCharPress(); if (!charPressFired) registerTap(); });
-
+ 
 /* The menu and game-over screens are overlays that sit ON TOP of the canvas,
    so a press there never reaches the canvas's own listeners above. These
    panels need their own long-press handling so the chat is reachable even
@@ -674,7 +719,7 @@ document.getElementById('recordComboBtn').addEventListener('click', () => {
   document.getElementById('comboDisplay').textContent = 'Play a round and tap your combo...';
   showPanel('menuPanel');
 });
-
+ 
 document.getElementById('testVoiceBtn').addEventListener('click', () => {
   const statusEl = document.getElementById('voiceStatus');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -693,7 +738,7 @@ document.getElementById('testVoiceBtn').addEventListener('click', () => {
   };
   rec.onerror = () => { statusEl.textContent = 'Mic error or permission denied.'; };
 });
-
+ 
 function triggerEmergency(source) {
   flashEl.style.opacity = '0.15';
   setTimeout(() => flashEl.style.opacity = '0', 150);
@@ -748,15 +793,63 @@ document.getElementById('addNoteBtn').addEventListener('click', () => {
   evidenceLog.unshift({ time: new Date().toLocaleString(), note: val });
   document.getElementById('manualNote').value = ''; renderLog();
 });
-document.getElementById('exportLogBtn').addEventListener('click', () => {
-  const text = evidenceLogToText();
-  const blob = new Blob([text], { type: 'text/plain' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'aegis_evidence_log.txt'; a.click();
-});
 function evidenceLogToText() {
   return evidenceLog.map(e => `[${e.time}] ${e.note ? e.note : (e.source + ' | contacts: ' + e.contacts.join(', ') + ' | location: ' + (e.location||'n/a'))}`).join('\n') || 'No entries.';
 }
-
+ 
+/* Adds a SHA-256 hash of the exported text underneath it. This lets anyone
+   -- the victim, police, a lawyer -- re-hash the file later and confirm it
+   matches, so tampering after export would be detectable. It is a tamper-
+   evidence tool, not a legal certification, so the wording below says that
+   plainly rather than claiming a court will accept it. */
+async function sha256Hex(text) {
+  const bytes = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+document.getElementById('exportLogBtn').addEventListener('click', async () => {
+  const exportedAt = new Date().toISOString();
+  const body = `AEGIS EVIDENCE LOG\nExported: ${exportedAt}\n\n--- ENTRIES ---\n${evidenceLogToText()}`;
+ 
+  let sealBlock;
+  try {
+    const hash = await sha256Hex(body);
+    sealBlock = `\n\n==================================================\nSHA-256 hash of the text above: ${hash}\n\nThis hash is a tamper-evidence check, not a legal certification -- if you\nre-hash this exact text later and get a different value, the file has been\nedited. Keep the original alongside this hash when sharing with police or\na lawyer.\n==================================================`;
+  } catch (e) {
+    sealBlock = '\n\n(Could not compute an integrity hash on this device -- log exported without one.)';
+  }
+ 
+  const text = body + sealBlock;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `aegis_evidence_log_${Date.now()}.txt`;
+  a.click();
+});
+ 
+/* ================= Duress mode ================= */
+// Long-pressing the title of a sensitive panel opens the decoy console
+// instead. This is separate from the ordinary panel long-presses (which
+// open chat) so it can be armed only on the two screens someone might
+// actually force you to show them.
+function armDuressTrigger(headingEl) {
+  let timer = null;
+  const start = () => { timer = setTimeout(openDecoy, 900); };
+  const cancel = () => clearTimeout(timer);
+  headingEl.addEventListener('mousedown', start);
+  headingEl.addEventListener('mouseup', cancel);
+  headingEl.addEventListener('mouseleave', cancel);
+  headingEl.addEventListener('touchstart', start, { passive: true });
+  headingEl.addEventListener('touchend', cancel);
+}
+function openDecoy() {
+  document.getElementById('decoySkinCount').textContent = unlockedSkins.length + ' / ' + SKINS.length;
+  document.getElementById('decoyHighScore').textContent = (highScores[0] && highScores[0].score) || 0;
+  showPanel('decoyPanel');
+}
+document.getElementById('decoyExitBtn').addEventListener('click', () => showPanel('menuPanel'));
+document.querySelectorAll('#settingsPanel h2, #journalPanel h2').forEach(armDuressTrigger);
+ 
 document.getElementById('openJournalBtn').addEventListener('click', () => { renderLog(); showPanel('journalPanel'); });
 document.getElementById('journalBackBtn').addEventListener('click', () => showPanel('settingsPanel'));
 function switchTab(tabId) {
@@ -764,13 +857,13 @@ function switchTab(tabId) {
   document.querySelectorAll('.tabContent').forEach(c => c.classList.toggle('active', c.id === tabId));
 }
 document.querySelectorAll('.tabBtn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
-
+ 
 /* ================= AI-powered support chatbot ================= */
 // Crisis-language detection stays 100% local and instant -- it must never
 // depend on a network call succeeding. This always wins over the AI.
 const RISK_WORDS = ['suicide','kill myself','end my life','hurt myself','want to die','self harm'];
 function isRiskMessage(msg) { return RISK_WORDS.some(w => msg.toLowerCase().includes(w)); }
-
+ 
 const chatLogEl = document.getElementById('chatLog');
 function addChatMsg(text, who) {
   const div = document.createElement('div'); div.className = 'chatMsg ' + who; div.textContent = text;
@@ -785,20 +878,20 @@ function setQuickBtns(options) {
     wrap.appendChild(b);
   });
 }
-
+ 
 // NOTE: the system prompt now lives on the server (api/chat.js), not here --
 // keeping it server-side means it can't be viewed or edited by anyone
 // inspecting this page's source.
-
+ 
 let chatHistory = []; // [{role: 'user'|'assistant', content: '...'}]
-
+ 
 function botIntro() {
   chatLogEl.innerHTML = '';
   chatHistory = [];
   addChatMsg("Hi, I'm here to listen. You can tell me what's going on, in your own words -- nothing you say here leaves this device except to generate a reply.", 'bot');
   setQuickBtns(["Someone is threatening me", "I don't know if this counts as a crime", "I just need to talk"]);
 }
-
+ 
 async function callAI() {
   // Calls YOUR server, not Anthropic directly. Your server (api/chat.js)
   // holds the real API key and the system prompt -- this file never sees it.
@@ -808,7 +901,7 @@ async function callAI() {
     body: JSON.stringify({ messages: chatHistory }),
   });
   const data = await response.json();
-
+ 
   if (!response.ok) {
     // Check the specific nested error message FIRST -- the generic
     // wrapper text was masking it before.
@@ -816,16 +909,16 @@ async function callAI() {
     const detail = nested || data.error || 'Unknown server error';
     throw new Error(`Server responded ${response.status}: ${detail}`);
   }
-
+ 
   const text = (data.content || []).map(b => b.text || '').join('');
   if (!text) throw new Error('AI response had no text content');
   return text;
 }
-
+ 
 async function handleChat(msg) {
   addChatMsg(msg, 'user');
   setQuickBtns([]);
-
+ 
   // Hard local safety net -- fires before any network call, always.
   if (isRiskMessage(msg)) {
     addChatMsg("I'm really glad you told me. What you're feeling matters, and you don't have to handle it alone. Please reach out right now to the Kiran mental health helpline: 1800-599-0019 (toll-free, 24x7), or iCall: 9152987821. If you're in immediate danger, please call 112.", 'bot');
@@ -835,17 +928,17 @@ async function handleChat(msg) {
     chatHistory.push({ role: 'assistant', content: 'Provided crisis helpline numbers.' });
     return;
   }
-
+ 
   chatHistory.push({ role: 'user', content: msg });
   const typingEl = addChatMsg('Typing...', 'bot');
   typingEl.style.opacity = '0.6';
-
+ 
   try {
     const reply = await callAI();
     typingEl.remove();
     addChatMsg(reply, 'bot');
     chatHistory.push({ role: 'assistant', content: reply });
-
+ 
     const lowerReply = reply.toLowerCase();
     if (lowerReply.includes('cybercrime.gov.in') || lowerReply.includes('1930')) {
       setQuickBtns(["Open the guide", "Tell me more"]);
@@ -859,7 +952,11 @@ async function handleChat(msg) {
     setQuickBtns(["Open the guide", "Try again"]);
   }
 }
-
+ 
+document.querySelectorAll('#quickActions button').forEach(b => {
+  b.addEventListener('click', () => handleChat(b.dataset.prompt));
+});
+ 
 document.getElementById('chatSendBtn').addEventListener('click', () => {
   const inp = document.getElementById('chatInput'); const val = inp.value.trim();
   if (!val) return; inp.value = ''; handleChat(val);
@@ -868,8 +965,8 @@ document.getElementById('chatInput').addEventListener('keydown', e => { if (e.ke
 document.addEventListener('click', e => {
   if (e.target && e.target.textContent === 'Open the guide') switchTab('guideTab');
 });
-
-
+ 
+ 
 /* ================= Diagnostics (Phase 7) ================= */
 function runDiagnostics() {
   const results = [];
@@ -893,20 +990,20 @@ function runDiagnostics() {
   })();
   results.push({ name: 'isRiskMessage() flags risk language', pass: isRiskMessage('I want to hurt myself') === true });
   results.push({ name: 'isRiskMessage() does not flag unrelated text', pass: isRiskMessage('someone is threatening me') === false });
-
+ 
   const passCount = results.filter(r => r.pass).length;
   document.getElementById('diagSummary').textContent = `${passCount} / ${results.length} checks passed`;
   document.getElementById('diagResults').innerHTML = results.map(r => `
     <div class="testRow ${r.pass ? 'pass' : 'fail'}"><span>${r.name}</span><span class="testTag ${r.pass ? 'pass' : 'fail'}">${r.pass ? 'PASS' : 'FAIL'}</span></div>`).join('');
 }
 document.getElementById('runDiagBtn').addEventListener('click', runDiagnostics);
-
+ 
 /* ================= Phase 8: guided demo mode ================= */
 const demoBar = document.getElementById('demoBar');
 const demoText = document.getElementById('demoText');
 const demoStepLabel = document.getElementById('demoStepLabel');
 let demoStep = 0;
-
+ 
 const DEMO_STEPS = [
   {
     text: "This is Sky Hopper — a fully playable game. Nothing here looks like a safety app.",
@@ -948,7 +1045,7 @@ const DEMO_STEPS = [
     run: () => {},
   },
 ];
-
+ 
 function showDemoStep() {
   const step = DEMO_STEPS[demoStep];
   demoStepLabel.textContent = `${demoStep + 1} / ${DEMO_STEPS.length}`;
@@ -964,10 +1061,14 @@ document.getElementById('demoNextBtn').addEventListener('click', () => {
   demoStep++; showDemoStep();
 });
 document.getElementById('demoExitBtn').addEventListener('click', () => { demoBar.classList.remove('show'); showPanel('menuPanel'); });
-
+ 
 /* initial paint */
 bird = { x:70, y:H/2, vy:0, r:14 }; pipes = []; coins = []; draw();
 checkForInvite();
 </script>
 </body>
 </html>
+ 
+
+
+
